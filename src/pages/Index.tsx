@@ -221,15 +221,24 @@ const Index = () => {
                 </p>
               </div>
             </div>
-            <Button
-              onClick={() => navigate("/cadastrar")}
-              size="lg"
-              variant="secondary"
-              className="hidden md:flex gap-2"
-            >
-              <Plus className="w-5 h-5" />
-              Cadastrar Empresa
-            </Button>
+            <div className="hidden md:flex gap-3">
+              <Button
+                onClick={() => navigate("/faq")}
+                size="lg"
+                variant="outline"
+              >
+                FAQ
+              </Button>
+              <Button
+                onClick={() => navigate("/cadastrar")}
+                size="lg"
+                variant="secondary"
+                className="flex gap-2"
+              >
+                <Plus className="w-5 h-5" />
+                Cadastrar Empresa
+              </Button>
+            </div>
           </div>
           <SearchBar value={searchTerm} onChange={setSearchTerm} />
         </div>
