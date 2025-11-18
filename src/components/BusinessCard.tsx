@@ -14,6 +14,19 @@ export interface Business {
   website: string;
   rating: number;
   image: string;
+  // Extended fields for Schema.org SEO
+  streetAddress?: string;
+  addressLocality?: string;
+  addressRegion?: string;
+  postalCode?: string;
+  addressCountry?: string;
+  latitude?: string;
+  longitude?: string;
+  priceRange?: string;
+  openingHours?: string[];
+  foundingDate?: string;
+  reviewCount?: number;
+  areaServedRadius?: string;
 }
 
 interface BusinessCardProps {
