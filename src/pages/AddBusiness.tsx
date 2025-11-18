@@ -1,0 +1,236 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { ArrowLeft, Building2, Save } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+const AddBusiness = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [formData, setFormData] = useState({
+    name: "",
+    category: "",
+    description: "",
+    address: "",
+    phone: "",
+    email: "",
+    website: "",
+    image: "",
+  });
+
+  const categories = [
+    "Restaurante",
+    "Tecnologia",
+    "Saúde",
+    "Cafeteria",
+    "Pet Shop",
+    "Educação",
+    "Serviços",
+    "Comércio",
+  ];
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Validação básica
+    if (!formData.name || !formData.category || !formData.phone) {
+      toast({
+        title: "Erro",
+        description: "Por favor, preencha os campos obrigatórios.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Aqui você adicionaria a lógica para salvar os dados
+    toast({
+      title: "Sucesso!",
+      description: "Empresa cadastrada com sucesso.",
+    });
+    
+    navigate("/");
+  };
+
+  const handleChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="bg-gradient-hero text-primary-foreground py-6 shadow-lg">
+        <div className="container mx-auto px-4">
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/")}
+            className="mb-4 hover:bg-primary-foreground/10"
+          >
+            <ArrowLeft className="w-5 h-5 mr-2" />
+            Voltar
+          </Button>
+          <div className="flex items-center gap-3">
+            <Building2 className="w-10 h-10" />
+            <h1 className="text-3xl md:text-4xl font-bold">Cadastrar Nova Empresa</h1>
+          </div>
+        </div>
+      </header>
+
+      {/* Formulário */}
+      <main className="container mx-auto px-4 py-8">
+        <Card className="p-6 md:p-8 shadow-card bg-gradient-card max-w-3xl mx-auto">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-foreground font-semibold">
+                Nome da Empresa *
+              </Label>
+              <Input
+                id="name"
+                value={formData.name}
+                onChange={(e) => handleChange("name", e.target.value)}
+                placeholder="Ex: Restaurante Sabor Brasileiro"
+                required
+                className="border-2 focus:border-primary"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="category" className="text-foreground font-semibold">
+                Categoria *
+              </Label>
+              <Select
+                value={formData.category}
+                onValueChange={(value) => handleChange("category", value)}
+              >
+                <SelectTrigger className="border-2 focus:border-primary">
+                  <SelectValue placeholder="Selecione uma categoria" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((cat) => (
+                    <SelectItem key={cat} value={cat}>
+                      {cat}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="description" className="text-foreground font-semibold">
+                Descrição
+              </Label>
+              <Textarea
+                id="description"
+                value={formData.description}
+                onChange={(e) => handleChange("description", e.target.value)}
+                placeholder="Descreva os produtos/serviços oferecidos..."
+                rows={4}
+                className="border-2 focus:border-primary resize-none"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="phone" className="text-foreground font-semibold">
+                  Telefone *
+                </Label>
+                <Input
+                  id="phone"
+                  value={formData.phone}
+                  onChange={(e) => handleChange("phone", e.target.value)}
+                  placeholder="(11) 98765-4321"
+                  required
+                  className="border-2 focus:border-primary"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-foreground font-semibold">
+                  E-mail
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => handleChange("email", e.target.value)}
+                  placeholder="contato@empresa.com.br"
+                  className="border-2 focus:border-primary"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="address" className="text-foreground font-semibold">
+                Endereço
+              </Label>
+              <Input
+                id="address"
+                value={formData.address}
+                onChange={(e) => handleChange("address", e.target.value)}
+                placeholder="Rua, número, bairro"
+                className="border-2 focus:border-primary"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="website" className="text-foreground font-semibold">
+                Website
+              </Label>
+              <Input
+                id="website"
+                value={formData.website}
+                onChange={(e) => handleChange("website", e.target.value)}
+                placeholder="www.empresa.com.br"
+                className="border-2 focus:border-primary"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="image" className="text-foreground font-semibold">
+                URL da Imagem
+              </Label>
+              <Input
+                id="image"
+                value={formData.image}
+                onChange={(e) => handleChange("image", e.target.value)}
+                placeholder="https://exemplo.com/imagem.jpg"
+                className="border-2 focus:border-primary"
+              />
+            </div>
+
+            <div className="flex gap-4 pt-4">
+              <Button
+                type="submit"
+                size="lg"
+                className="flex-1 gap-2"
+              >
+                <Save className="w-5 h-5" />
+                Cadastrar Empresa
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="lg"
+                onClick={() => navigate("/")}
+              >
+                Cancelar
+              </Button>
+            </div>
+          </form>
+        </Card>
+      </main>
+    </div>
+  );
+};
+
+export default AddBusiness;
