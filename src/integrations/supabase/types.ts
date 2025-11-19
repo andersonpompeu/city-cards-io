@@ -127,9 +127,13 @@ export type Database = {
           gallery_images: string[] | null
           id: string
           image: string
+          keywords: string[] | null
           latitude: number | null
+          long_description: string | null
           longitude: number | null
+          meta_description: string | null
           name: string
+          neighborhood: string | null
           opening_hours: string[] | null
           owner_id: string | null
           phone: string
@@ -137,6 +141,7 @@ export type Database = {
           price_range: string | null
           rating: number | null
           rejection_reason: string | null
+          slug: string | null
           status: string | null
           street_address: string | null
           updated_at: string
@@ -157,9 +162,13 @@ export type Database = {
           gallery_images?: string[] | null
           id: string
           image: string
+          keywords?: string[] | null
           latitude?: number | null
+          long_description?: string | null
           longitude?: number | null
+          meta_description?: string | null
           name: string
+          neighborhood?: string | null
           opening_hours?: string[] | null
           owner_id?: string | null
           phone: string
@@ -167,6 +176,7 @@ export type Database = {
           price_range?: string | null
           rating?: number | null
           rejection_reason?: string | null
+          slug?: string | null
           status?: string | null
           street_address?: string | null
           updated_at?: string
@@ -187,9 +197,13 @@ export type Database = {
           gallery_images?: string[] | null
           id?: string
           image?: string
+          keywords?: string[] | null
           latitude?: number | null
+          long_description?: string | null
           longitude?: number | null
+          meta_description?: string | null
           name?: string
+          neighborhood?: string | null
           opening_hours?: string[] | null
           owner_id?: string | null
           phone?: string
@@ -197,6 +211,7 @@ export type Database = {
           price_range?: string | null
           rating?: number | null
           rejection_reason?: string | null
+          slug?: string | null
           status?: string | null
           street_address?: string | null
           updated_at?: string
@@ -211,6 +226,9 @@ export type Database = {
           description: string | null
           icon: string | null
           id: string
+          long_description: string | null
+          meta_description: string | null
+          meta_title: string | null
           name: string
           slug: string
           updated_at: string | null
@@ -220,6 +238,9 @@ export type Database = {
           description?: string | null
           icon?: string | null
           id?: string
+          long_description?: string | null
+          meta_description?: string | null
+          meta_title?: string | null
           name: string
           slug: string
           updated_at?: string | null
@@ -229,6 +250,9 @@ export type Database = {
           description?: string | null
           icon?: string | null
           id?: string
+          long_description?: string | null
+          meta_description?: string | null
+          meta_title?: string | null
           name?: string
           slug?: string
           updated_at?: string | null
@@ -387,6 +411,7 @@ export type Database = {
     }
     Functions: {
       expire_old_highlights: { Args: never; Returns: undefined }
+      generate_slug: { Args: { id: string; name: string }; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

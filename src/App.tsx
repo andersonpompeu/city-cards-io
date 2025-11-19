@@ -17,6 +17,7 @@ import BusinessForm from "./pages/admin/BusinessForm";
 import CategoriesList from "./pages/admin/CategoriesList";
 import BusinessUsersList from "./pages/admin/BusinessUsersList";
 import AdminSettings from "./pages/admin/Settings";
+import AdminSeoSettings from "./pages/admin/SeoSettings";
 import HighlightsList from "./pages/admin/HighlightsList";
 
 // Business pages
@@ -39,7 +40,7 @@ const App = () => (
         <Routes>
           {/* Public routes */}
           <Route path="/" element={<Index />} />
-          <Route path="/empresa/:id" element={<BusinessDetails />} />
+          <Route path="/empresa/:slug" element={<BusinessDetails />} />
           <Route path="/cadastrar" element={<AddBusiness />} />
           <Route path="/adicionar" element={<AddBusiness />} />
           <Route path="/faq" element={<FAQ />} />
@@ -54,6 +55,7 @@ const App = () => (
           <Route path="/admin/categorias" element={<CategoriesList />} />
           <Route path="/admin/usuarios" element={<BusinessUsersList />} />
           <Route path="/admin/configuracoes" element={<AdminSettings />} />
+          <Route path="/admin/seo" element={<AdminSeoSettings />} />
           
           {/* Business owner routes */}
           <Route path="/empresa/login" element={<BusinessLogin />} />

@@ -5,7 +5,8 @@ import {
   FolderTree, 
   Users, 
   Settings,
-  Megaphone
+  Megaphone,
+  Search
 } from "lucide-react";
 
 export const AdminSidebar = () => {
@@ -15,6 +16,7 @@ export const AdminSidebar = () => {
     { to: "/admin/anuncios", icon: Megaphone, label: "Anúncios" },
     { to: "/admin/categorias", icon: FolderTree, label: "Categorias" },
     { to: "/admin/usuarios", icon: Users, label: "Usuários" },
+    { to: "/admin/seo", icon: Search, label: "SEO" },
     { to: "/admin/configuracoes", icon: Settings, label: "Configurações" },
   ];
 

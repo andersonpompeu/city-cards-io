@@ -85,21 +85,33 @@ export const SchemaMarkup = ({
         {business.name} - {business.category} em{" "}
         {business.addressLocality || "Maringá"}
       </title>
-      <meta name="title" content={`${business.name} - ${business.category}`} />
-      <meta name="description" content={business.description} />
-      <link rel="canonical" href={`${baseUrl}/empresa/${business.id}`} />
+      <meta 
+        name="title" 
+        content={business.meta_description 
+          ? `${business.name} - ${business.category}` 
+          : `${business.name} - ${business.category}`
+        } 
+      />
+      <meta 
+        name="description" 
+        content={business.meta_description || business.description} 
+      />
+      {business.keywords && business.keywords.length > 0 && (
+        <meta name="keywords" content={business.keywords.join(", ")} />
+      )}
+      <link rel="canonical" href={`${baseUrl}/empresa/${(business as any).slug || business.id}`} />
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content="business.business" />
       <meta
         property="og:url"
-        content={`${baseUrl}/empresa/${business.id}`}
+        content={`${baseUrl}/empresa/${(business as any).slug || business.id}`}
       />
       <meta
         property="og:title"
         content={`${business.name} - ${business.category}`}
       />
-      <meta property="og:description" content={business.description} />
+      <meta property="og:description" content={business.meta_description || business.description} />
       <meta property="og:image" content={business.image} />
       <meta property="business:contact_data:street_address" content={business.streetAddress || business.address} />
       <meta property="business:contact_data:locality" content={business.addressLocality || "Maringá"} />
@@ -111,13 +123,13 @@ export const SchemaMarkup = ({
       <meta property="twitter:card" content="summary_large_image" />
       <meta
         property="twitter:url"
-        content={`${baseUrl}/empresa/${business.id}`}
+        content={`${baseUrl}/empresa/${(business as any).slug || business.id}`}
       />
       <meta
         property="twitter:title"
         content={`${business.name} - ${business.category}`}
       />
-      <meta property="twitter:description" content={business.description} />
+      <meta property="twitter:description" content={business.meta_description || business.description} />
       <meta property="twitter:image" content={business.image} />
 
       {/* Schema.org JSON-LD */}

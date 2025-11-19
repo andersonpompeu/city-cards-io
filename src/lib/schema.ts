@@ -11,6 +11,12 @@ export interface BusinessSchemaData {
   website: string;
   rating: number;
   image: string;
+  // SEO fields
+  slug?: string;
+  meta_description?: string;
+  keywords?: string[];
+  neighborhood?: string;
+  long_description?: string;
   // Extended fields for Schema.org
   streetAddress?: string;
   addressLocality?: string;

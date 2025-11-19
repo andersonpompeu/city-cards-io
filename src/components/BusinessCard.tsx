@@ -22,6 +22,11 @@ export interface Business {
   whatsapp?: string;
   facebook?: string;
   instagram?: string;
+  slug?: string;
+  meta_description?: string;
+  keywords?: string[];
+  neighborhood?: string;
+  long_description?: string;
   // Extended fields for Schema.org SEO
   streetAddress?: string;
   addressLocality?: string;
@@ -58,14 +63,19 @@ export const BusinessCard = ({
   };
   const handleViewProfileClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    navigate(`/empresa/${business.id}`);
+    // Use slug if available, otherwise fall back to id
+    const identifier = (business as any).slug || business.id;
+    navigate(`/empresa/${identifier}`);
   };
   const renderStars = (rating: number) => {
     return Array.from({
       length: 5
     }, (_, i) => <Star key={i} className={`w-4 h-4 ${i < rating ? "fill-accent text-accent" : "fill-muted text-muted"}`} />);
   };
-  return <Card onClick={() => navigate(`/empresa/${business.id}`)} className={cn("overflow-hidden cursor-pointer transition-all duration-300 group bg-gradient-card border-border", highlight && "ring-2 ring-offset-2 shadow-xl hover:scale-[1.02]", !highlight && "hover:shadow-card-hover")} style={highlight ? {
+  // Use slug if available, otherwise fall back to id
+  const identifier = (business as any).slug || business.id;
+  
+  return <Card onClick={() => navigate(`/empresa/${identifier}`)} className={cn("overflow-hidden cursor-pointer transition-all duration-300 group bg-gradient-card border-border", highlight && "ring-2 ring-offset-2 shadow-xl hover:scale-[1.02]", !highlight && "hover:shadow-card-hover")} style={highlight ? {
     borderColor: highlight.border_color
   } : undefined}>
       <div className="relative h-48 overflow-hidden bg-muted">
