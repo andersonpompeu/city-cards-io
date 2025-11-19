@@ -24,6 +24,14 @@ export interface BusinessSchemaData {
   foundingDate?: string;
   reviewCount?: number;
   areaServedRadius?: string;
+  reviews?: ReviewData[];
+}
+
+export interface ReviewData {
+  author: string;
+  reviewRating: number;
+  reviewBody: string;
+  datePublished: string;
 }
 
 interface SchemaContext {
@@ -218,6 +226,36 @@ export function generateServiceSchema(
 }
 
 /**
+ * Generates Review Schema for individual reviews
+ */
+export function generateReviewSchema(
+  review: ReviewData,
+  business: BusinessSchemaData,
+  context: SchemaContext
+) {
+  return {
+    "@type": "Review",
+    author: {
+      "@type": "Person",
+      name: review.author,
+    },
+    datePublished: review.datePublished,
+    reviewBody: review.reviewBody,
+    reviewRating: {
+      "@type": "Rating",
+      ratingValue: review.reviewRating.toString(),
+      bestRating: "5",
+      worstRating: "1",
+    },
+    itemReviewed: {
+      "@type": "LocalBusiness",
+      name: business.name,
+      url: `${context.baseUrl}/empresa/${business.id}`,
+    },
+  };
+}
+
+/**
  * Generates complete Schema.org @graph for a business
  */
 export function generateBusinessSchema(
@@ -235,6 +273,13 @@ export function generateBusinessSchema(
   const placeSchema = generatePlaceSchema(business, context);
   if (placeSchema) {
     graph.splice(1, 0, placeSchema);
+  }
+
+  // Add individual Review schemas if reviews are available
+  if (business.reviews && business.reviews.length > 0) {
+    business.reviews.forEach((review) => {
+      graph.push(generateReviewSchema(review, business, context));
+    });
   }
 
   return {
