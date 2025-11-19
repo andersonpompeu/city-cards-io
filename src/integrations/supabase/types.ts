@@ -14,7 +14,140 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      businesses: {
+        Row: {
+          address: string
+          address_locality: string | null
+          address_region: string | null
+          category: string
+          created_at: string
+          description: string
+          email: string | null
+          founding_date: string | null
+          id: string
+          image: string
+          latitude: number | null
+          longitude: number | null
+          name: string
+          opening_hours: string[] | null
+          phone: string
+          postal_code: string | null
+          price_range: string | null
+          rating: number | null
+          street_address: string | null
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          address: string
+          address_locality?: string | null
+          address_region?: string | null
+          category: string
+          created_at?: string
+          description: string
+          email?: string | null
+          founding_date?: string | null
+          id: string
+          image: string
+          latitude?: number | null
+          longitude?: number | null
+          name: string
+          opening_hours?: string[] | null
+          phone: string
+          postal_code?: string | null
+          price_range?: string | null
+          rating?: number | null
+          street_address?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          address?: string
+          address_locality?: string | null
+          address_region?: string | null
+          category?: string
+          created_at?: string
+          description?: string
+          email?: string | null
+          founding_date?: string | null
+          id?: string
+          image?: string
+          latitude?: number | null
+          longitude?: number | null
+          name?: string
+          opening_hours?: string[] | null
+          phone?: string
+          postal_code?: string | null
+          price_range?: string | null
+          rating?: number | null
+          street_address?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      reviews: {
+        Row: {
+          business_id: string
+          comment: string
+          created_at: string
+          id: string
+          rating: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          business_id: string
+          comment: string
+          created_at?: string
+          id?: string
+          rating: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          business_id?: string
+          comment?: string
+          created_at?: string
+          id?: string
+          rating?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

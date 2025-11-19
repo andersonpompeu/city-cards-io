@@ -1,4 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,9 +11,14 @@ import {
   Globe,
   Star,
   Building2,
+  LogOut,
 } from "lucide-react";
 import { SchemaMarkup } from "@/components/SchemaMarkup";
 import { Business } from "@/components/BusinessCard";
+import { AuthDialog } from "@/components/AuthDialog";
+import { ReviewForm } from "@/components/ReviewForm";
+import { ReviewsList } from "@/components/ReviewsList";
+import { useAuth } from "@/hooks/useAuth";
 
 // Mesmos dados de exemplo da Index com campos estendidos
 const businesses: Business[] = [
@@ -189,6 +195,9 @@ const businesses: Business[] = [
 const BusinessDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user, loading: authLoading, signOut } = useAuth();
+  const [authDialogOpen, setAuthDialogOpen] = useState(false);
+  const [reviewRefresh, setReviewRefresh] = useState(0);
   const business = businesses.find((b) => b.id === Number(id));
 
   if (!business) {
@@ -231,18 +240,43 @@ const BusinessDetails = () => {
   return (
     <>
       <SchemaMarkup business={business} baseUrl="https://seusite.com" />
+      <AuthDialog
+        open={authDialogOpen}
+        onOpenChange={setAuthDialogOpen}
+        onSuccess={() => setReviewRefresh((prev) => prev + 1)}
+      />
       <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="bg-gradient-hero text-primary-foreground py-6 shadow-lg">
         <div className="container mx-auto px-4">
-          <Button
-            variant="ghost"
-            onClick={() => navigate("/")}
-            className="mb-4 hover:bg-primary-foreground/10"
-          >
-            <ArrowLeft className="w-5 h-5 mr-2" />
-            Voltar
-          </Button>
+          <div className="flex justify-between items-center mb-4">
+            <Button
+              variant="ghost"
+              onClick={() => navigate("/")}
+              className="hover:bg-primary-foreground/10"
+            >
+              <ArrowLeft className="w-5 h-5 mr-2" />
+              Voltar
+            </Button>
+            {user ? (
+              <Button
+                variant="ghost"
+                onClick={signOut}
+                className="hover:bg-primary-foreground/10 gap-2"
+              >
+                <LogOut className="w-5 h-5" />
+                Sair
+              </Button>
+            ) : (
+              <Button
+                variant="ghost"
+                onClick={() => setAuthDialogOpen(true)}
+                className="hover:bg-primary-foreground/10"
+              >
+                Entrar
+              </Button>
+            )}
+          </div>
           <div className="flex items-center gap-3">
             <Building2 className="w-10 h-10" />
             <h1 className="text-3xl md:text-4xl font-bold">Detalhes da Empresa</h1>
@@ -348,6 +382,32 @@ const BusinessDetails = () => {
             </div>
           </div>
         </Card>
+
+        {/* Seção de Avaliações */}
+        <div className="mt-8 space-y-6">
+          <h2 className="text-3xl font-bold text-foreground">Avaliações</h2>
+          
+          {user ? (
+            <ReviewForm
+              businessId={String(business.id)}
+              onSuccess={() => setReviewRefresh((prev) => prev + 1)}
+            />
+          ) : (
+            <Card className="p-6 text-center">
+              <p className="text-muted-foreground mb-4">
+                Faça login para deixar sua avaliação
+              </p>
+              <Button onClick={() => setAuthDialogOpen(true)}>
+                Entrar ou Criar Conta
+              </Button>
+            </Card>
+          )}
+
+          <ReviewsList
+            businessId={String(business.id)}
+            refreshTrigger={reviewRefresh}
+          />
+        </div>
       </main>
     </div>
     </>

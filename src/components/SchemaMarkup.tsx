@@ -1,9 +1,20 @@
 import { Helmet } from "react-helmet-async";
+import { useEffect, useState } from "react";
 import { BusinessSchemaData, generateBusinessSchema } from "@/lib/schema";
+import { supabase } from "@/integrations/supabase/client";
 
 interface SchemaMarkupProps {
   business: BusinessSchemaData;
   baseUrl?: string;
+}
+
+interface Review {
+  rating: number;
+  comment: string;
+  created_at: string;
+  profiles?: {
+    full_name: string | null;
+  };
 }
 
 /**
@@ -14,7 +25,55 @@ export const SchemaMarkup = ({
   business,
   baseUrl = "https://seusite.com",
 }: SchemaMarkupProps) => {
-  const schema = generateBusinessSchema(business, {
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const { data: reviewsData } = await supabase
+          .from("reviews")
+          .select("rating, comment, created_at, user_id")
+          .eq("business_id", String(business.id))
+          .order("created_at", { ascending: false })
+          .limit(10);
+
+        if (reviewsData) {
+          const userIds = reviewsData.map((r) => r.user_id);
+          const { data: profilesData } = await supabase
+            .from("profiles")
+            .select("id, full_name")
+            .in("id", userIds);
+
+          const reviewsWithProfiles = reviewsData.map((review) => ({
+            ...review,
+            profiles: profilesData?.find((p) => p.id === (review as any).user_id),
+          }));
+
+          setReviews(reviewsWithProfiles as any);
+        }
+      } catch (error) {
+        console.error("Error fetching reviews for schema:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReviews();
+  }, [business.id]);
+
+  // Create business data with reviews for schema generation
+  const businessWithReviews = {
+    ...business,
+    reviews: reviews.map((r) => ({
+      author: (r as any).profiles?.full_name || "Usuário",
+      reviewRating: r.rating,
+      reviewBody: r.comment,
+      datePublished: r.created_at,
+    })),
+  };
+
+  const schema = generateBusinessSchema(businessWithReviews, {
     baseUrl,
     currentPath: `/empresa/${business.id}`,
   });
