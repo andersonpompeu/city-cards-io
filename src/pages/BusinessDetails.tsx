@@ -200,12 +200,16 @@ const businesses: Business[] = [
 ];
 
 const BusinessDetails = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
   const navigate = useNavigate();
   const { user, loading: authLoading, signOut } = useAuth();
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
   const [reviewRefresh, setReviewRefresh] = useState(0);
-  const business = businesses.find((b) => b.id === Number(id));
+  
+  // For now, use mock data - in production, fetch from Supabase by slug
+  const business = businesses.find((b) => 
+    (b as any).slug === slug || b.id === Number(slug)
+  );
 
   if (!business) {
     return (
