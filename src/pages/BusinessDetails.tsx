@@ -12,6 +12,9 @@ import {
   Star,
   Building2,
   LogOut,
+  MessageCircle,
+  Facebook,
+  Instagram,
 } from "lucide-react";
 import { SchemaMarkup } from "@/components/SchemaMarkup";
 import { Business } from "@/components/BusinessCard";
@@ -29,6 +32,10 @@ const businesses: Business[] = [
     description: "Serviços elétricos residenciais e comerciais. Instalações, manutenções e reparos elétricos com segurança e qualidade.",
     address: "Av. Brasil, 2271",
     phone: "+5544999998163",
+    whatsapp: "+5544999998163",
+    verified: true,
+    facebook: "https://facebook.com/eletricistamaringa",
+    instagram: "https://instagram.com/eletricistamaringa",
     email: "contato@eletricistamaringa.com.br",
     website: "www.eletricistamaringa.com.br",
     rating: 5,
@@ -229,8 +236,10 @@ const BusinessDetails = () => {
     window.location.href = `tel:${business.phone}`;
   };
 
-  const handleEmail = () => {
-    window.location.href = `mailto:${business.email}`;
+  const handleWhatsApp = () => {
+    const whatsappNumber = business.whatsapp || business.phone;
+    const cleanNumber = whatsappNumber.replace(/\D/g, '');
+    window.open(`https://wa.me/${cleanNumber}`, '_blank');
   };
 
   const handleWebsite = () => {
@@ -349,6 +358,37 @@ const BusinessDetails = () => {
                   <p className="text-muted-foreground">{business.website}</p>
                 </div>
               </div>
+
+              {(business.facebook || business.instagram) && (
+                <div className="flex items-start gap-3 p-4 rounded-lg bg-muted/30">
+                  <div className="w-6 h-6 flex-shrink-0 mt-1" />
+                  <div className="w-full">
+                    <h3 className="font-semibold text-foreground mb-3">Redes Sociais</h3>
+                    <div className="flex gap-3">
+                      {business.facebook && (
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => window.open(business.facebook, '_blank')}
+                          className="hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300 dark:hover:bg-blue-950"
+                        >
+                          <Facebook className="w-5 h-5" />
+                        </Button>
+                      )}
+                      {business.instagram && (
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => window.open(business.instagram, '_blank')}
+                          className="hover:bg-pink-50 hover:text-pink-600 hover:border-pink-300 dark:hover:bg-pink-950"
+                        >
+                          <Instagram className="w-5 h-5" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Botões de Ação */}
@@ -362,13 +402,12 @@ const BusinessDetails = () => {
                 Ligar
               </Button>
               <Button
-                onClick={handleEmail}
+                onClick={handleWhatsApp}
                 size="lg"
-                variant="outline"
-                className="gap-2"
+                className="gap-2 bg-green-600 hover:bg-green-700 text-white"
               >
-                <Mail className="w-5 h-5" />
-                Enviar E-mail
+                <MessageCircle className="w-5 h-5" />
+                WhatsApp
               </Button>
               <Button
                 onClick={handleWebsite}

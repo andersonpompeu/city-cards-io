@@ -24,8 +24,11 @@ const AddBusiness = () => {
     description: "",
     address: "",
     phone: "",
+    whatsapp: "",
     email: "",
     website: "",
+    facebook: "",
+    instagram: "",
     image: "",
   });
 
@@ -148,12 +151,27 @@ const AddBusiness = () => {
                   id="phone"
                   value={formData.phone}
                   onChange={(e) => handleChange("phone", e.target.value)}
-                  placeholder="(11) 98765-4321"
+                  placeholder="(44) 98765-4321"
                   required
                   className="border-2 focus:border-primary"
                 />
               </div>
 
+              <div className="space-y-2">
+                <Label htmlFor="whatsapp" className="text-foreground font-semibold">
+                  WhatsApp
+                </Label>
+                <Input
+                  id="whatsapp"
+                  value={formData.whatsapp}
+                  onChange={(e) => handleChange("whatsapp", e.target.value)}
+                  placeholder="(44) 98765-4321"
+                  className="border-2 focus:border-primary"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-foreground font-semibold">
                   E-mail
@@ -164,6 +182,19 @@ const AddBusiness = () => {
                   value={formData.email}
                   onChange={(e) => handleChange("email", e.target.value)}
                   placeholder="contato@empresa.com.br"
+                  className="border-2 focus:border-primary"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="website" className="text-foreground font-semibold">
+                  Website
+                </Label>
+                <Input
+                  id="website"
+                  value={formData.website}
+                  onChange={(e) => handleChange("website", e.target.value)}
+                  placeholder="www.empresa.com.br"
                   className="border-2 focus:border-primary"
                 />
               </div>
@@ -182,17 +213,32 @@ const AddBusiness = () => {
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="website" className="text-foreground font-semibold">
-                Website
-              </Label>
-              <Input
-                id="website"
-                value={formData.website}
-                onChange={(e) => handleChange("website", e.target.value)}
-                placeholder="www.empresa.com.br"
-                className="border-2 focus:border-primary"
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="facebook" className="text-foreground font-semibold">
+                  Facebook
+                </Label>
+                <Input
+                  id="facebook"
+                  value={formData.facebook}
+                  onChange={(e) => handleChange("facebook", e.target.value)}
+                  placeholder="https://facebook.com/suaempresa"
+                  className="border-2 focus:border-primary"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="instagram" className="text-foreground font-semibold">
+                  Instagram
+                </Label>
+                <Input
+                  id="instagram"
+                  value={formData.instagram}
+                  onChange={(e) => handleChange("instagram", e.target.value)}
+                  placeholder="https://instagram.com/suaempresa"
+                  className="border-2 focus:border-primary"
+                />
+              </div>
             </div>
 
             <div className="space-y-2">
