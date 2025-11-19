@@ -14,6 +14,104 @@ export type Database = {
   }
   public: {
     Tables: {
+      ads_highlight: {
+        Row: {
+          badge_color: string | null
+          border_color: string | null
+          business_id: string
+          created_at: string | null
+          created_by: string | null
+          end_date: string
+          id: string
+          level: Database["public"]["Enums"]["highlight_level"]
+          manual_order: number | null
+          notes: string | null
+          pin_to_top: boolean | null
+          request_notes: string | null
+          start_date: string
+          status: Database["public"]["Enums"]["highlight_status"]
+          updated_at: string | null
+        }
+        Insert: {
+          badge_color?: string | null
+          border_color?: string | null
+          business_id: string
+          created_at?: string | null
+          created_by?: string | null
+          end_date: string
+          id?: string
+          level?: Database["public"]["Enums"]["highlight_level"]
+          manual_order?: number | null
+          notes?: string | null
+          pin_to_top?: boolean | null
+          request_notes?: string | null
+          start_date: string
+          status?: Database["public"]["Enums"]["highlight_status"]
+          updated_at?: string | null
+        }
+        Update: {
+          badge_color?: string | null
+          border_color?: string | null
+          business_id?: string
+          created_at?: string | null
+          created_by?: string | null
+          end_date?: string
+          id?: string
+          level?: Database["public"]["Enums"]["highlight_level"]
+          manual_order?: number | null
+          notes?: string | null
+          pin_to_top?: boolean | null
+          request_notes?: string | null
+          start_date?: string
+          status?: Database["public"]["Enums"]["highlight_status"]
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ads_highlight_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ads_settings: {
+        Row: {
+          alto_color: string | null
+          auto_expire_enabled: boolean | null
+          created_at: string | null
+          default_duration_days: number | null
+          id: string
+          max_active_highlights: number | null
+          padrao_color: string | null
+          premium_color: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          alto_color?: string | null
+          auto_expire_enabled?: boolean | null
+          created_at?: string | null
+          default_duration_days?: number | null
+          id?: string
+          max_active_highlights?: number | null
+          padrao_color?: string | null
+          premium_color?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          alto_color?: string | null
+          auto_expire_enabled?: boolean | null
+          created_at?: string | null
+          default_duration_days?: number | null
+          id?: string
+          max_active_highlights?: number | null
+          padrao_color?: string | null
+          premium_color?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       businesses: {
         Row: {
           address: string
@@ -288,6 +386,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      expire_old_highlights: { Args: never; Returns: undefined }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -298,6 +397,13 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "business_owner" | "user"
+      highlight_level: "premium" | "alto" | "padrao"
+      highlight_status:
+        | "ativo"
+        | "expirado"
+        | "pausado"
+        | "aguardando_aprovacao"
+        | "rejeitado"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -426,6 +532,14 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "business_owner", "user"],
+      highlight_level: ["premium", "alto", "padrao"],
+      highlight_status: [
+        "ativo",
+        "expirado",
+        "pausado",
+        "aguardando_aprovacao",
+        "rejeitado",
+      ],
     },
   },
 } as const

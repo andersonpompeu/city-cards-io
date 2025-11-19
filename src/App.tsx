@@ -17,6 +17,7 @@ import BusinessForm from "./pages/admin/BusinessForm";
 import CategoriesList from "./pages/admin/CategoriesList";
 import BusinessUsersList from "./pages/admin/BusinessUsersList";
 import AdminSettings from "./pages/admin/Settings";
+import HighlightsList from "./pages/admin/HighlightsList";
 
 // Business pages
 import BusinessLogin from "./pages/business/Login";
@@ -25,6 +26,7 @@ import ProfileEdit from "./pages/business/ProfileEdit";
 import ReviewsManagement from "./pages/business/ReviewsManagement";
 import SecuritySettings from "./pages/business/SecuritySettings";
 import Statistics from "./pages/business/Statistics";
+import RequestHighlight from "./pages/business/RequestHighlight";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +49,7 @@ const App = () => (
           <Route path="/admin/empresas" element={<BusinessList />} />
           <Route path="/admin/empresas/nova" element={<BusinessForm />} />
           <Route path="/admin/empresas/:id/editar" element={<BusinessForm />} />
+          <Route path="/admin/anuncios" element={<HighlightsList />} />
           <Route path="/admin/categorias" element={<CategoriesList />} />
           <Route path="/admin/usuarios" element={<BusinessUsersList />} />
           <Route path="/admin/configuracoes" element={<AdminSettings />} />
@@ -55,6 +58,7 @@ const App = () => (
           <Route path="/empresa/login" element={<BusinessLogin />} />
           <Route path="/empresa/dashboard" element={<BusinessDashboard />} />
           <Route path="/empresa/perfil" element={<ProfileEdit />} />
+          <Route path="/empresa/destaque" element={<RequestHighlight />} />
           <Route path="/empresa/avaliacoes" element={<ReviewsManagement />} />
           <Route path="/empresa/senha" element={<SecuritySettings />} />
           <Route path="/empresa/estatisticas" element={<Statistics />} />

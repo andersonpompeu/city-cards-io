@@ -4,13 +4,15 @@ import {
   Building2, 
   FolderTree, 
   Users, 
-  Settings 
+  Settings,
+  Megaphone
 } from "lucide-react";
 
 export const AdminSidebar = () => {
   const menuItems = [
     { to: "/admin/dashboard", icon: LayoutDashboard, label: "Dashboard" },
     { to: "/admin/empresas", icon: Building2, label: "Empresas" },
+    { to: "/admin/anuncios", icon: Megaphone, label: "Anúncios" },
     { to: "/admin/categorias", icon: FolderTree, label: "Categorias" },
     { to: "/admin/usuarios", icon: Users, label: "Usuários" },
     { to: "/admin/configuracoes", icon: Settings, label: "Configurações" },
