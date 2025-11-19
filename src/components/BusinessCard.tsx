@@ -1,10 +1,12 @@
-import { Building2, MapPin, Phone, Star } from "lucide-react";
+import { Building2, MapPin, Phone, Star, MessageCircle, Eye } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Highlight } from "@/types/highlight";
 import { HighlightBadge } from "@/components/HighlightBadge";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 export interface Business {
   id: number;
@@ -17,6 +19,8 @@ export interface Business {
   website: string;
   rating: number;
   image: string;
+  verified?: boolean;
+  whatsapp?: string;
   // Extended fields for Schema.org SEO
   streetAddress?: string;
   addressLocality?: string;
@@ -39,6 +43,25 @@ interface BusinessCardProps {
 
 export const BusinessCard = ({ business, highlight }: BusinessCardProps) => {
   const navigate = useNavigate();
+
+  const handleWhatsAppClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    if (!business.verified) {
+      toast.info("Este perfil ainda não foi verificado");
+      return;
+    }
+
+    const whatsappNumber = business.whatsapp || business.phone;
+    const cleanNumber = whatsappNumber.replace(/\D/g, '');
+    const whatsappUrl = `https://wa.me/${cleanNumber}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  const handleViewProfileClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/empresa/${business.id}`);
+  };
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -106,7 +129,7 @@ export const BusinessCard = ({ business, highlight }: BusinessCardProps) => {
           {business.description}
         </p>
 
-        <div className="space-y-2">
+        <div className="space-y-2 mb-4">
           <div className="flex items-center gap-2 text-sm text-foreground">
             <MapPin className="w-4 h-4 text-primary flex-shrink-0" />
             <span className="truncate">{business.address}</span>
@@ -115,6 +138,33 @@ export const BusinessCard = ({ business, highlight }: BusinessCardProps) => {
             <Phone className="w-4 h-4 text-primary flex-shrink-0" />
             <span>{business.phone}</span>
           </div>
+        </div>
+
+        <div className="flex gap-2 pt-3 border-t border-border">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleWhatsAppClick}
+            disabled={!business.verified}
+            className={cn(
+              "flex-1 gap-2",
+              business.verified 
+                ? "hover:bg-green-50 hover:text-green-700 hover:border-green-300 dark:hover:bg-green-950 dark:hover:text-green-400" 
+                : "opacity-50 cursor-not-allowed"
+            )}
+          >
+            <MessageCircle className="w-4 h-4" />
+            WhatsApp
+          </Button>
+          <Button
+            variant="default"
+            size="sm"
+            onClick={handleViewProfileClick}
+            className="flex-1 gap-2"
+          >
+            <Eye className="w-4 h-4" />
+            Ver Perfil
+          </Button>
         </div>
       </div>
     </Card>
