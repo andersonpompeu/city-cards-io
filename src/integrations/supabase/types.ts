@@ -19,70 +19,142 @@ export type Database = {
           address: string
           address_locality: string | null
           address_region: string | null
+          approved_at: string | null
+          approved_by: string | null
           category: string
           created_at: string
           description: string
           email: string | null
           founding_date: string | null
+          gallery_images: string[] | null
           id: string
           image: string
           latitude: number | null
           longitude: number | null
           name: string
           opening_hours: string[] | null
+          owner_id: string | null
           phone: string
           postal_code: string | null
           price_range: string | null
           rating: number | null
+          rejection_reason: string | null
+          status: string | null
           street_address: string | null
           updated_at: string
+          views_count: number | null
           website: string | null
         }
         Insert: {
           address: string
           address_locality?: string | null
           address_region?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
           category: string
           created_at?: string
           description: string
           email?: string | null
           founding_date?: string | null
+          gallery_images?: string[] | null
           id: string
           image: string
           latitude?: number | null
           longitude?: number | null
           name: string
           opening_hours?: string[] | null
+          owner_id?: string | null
           phone: string
           postal_code?: string | null
           price_range?: string | null
           rating?: number | null
+          rejection_reason?: string | null
+          status?: string | null
           street_address?: string | null
           updated_at?: string
+          views_count?: number | null
           website?: string | null
         }
         Update: {
           address?: string
           address_locality?: string | null
           address_region?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
           category?: string
           created_at?: string
           description?: string
           email?: string | null
           founding_date?: string | null
+          gallery_images?: string[] | null
           id?: string
           image?: string
           latitude?: number | null
           longitude?: number | null
           name?: string
           opening_hours?: string[] | null
+          owner_id?: string | null
           phone?: string
           postal_code?: string | null
           price_range?: string | null
           rating?: number | null
+          rejection_reason?: string | null
+          status?: string | null
           street_address?: string | null
           updated_at?: string
+          views_count?: number | null
           website?: string | null
+        }
+        Relationships: []
+      }
+      categories: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          icon: string | null
+          id: string
+          name: string
+          slug: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+          slug: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+          slug?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      platform_settings: {
+        Row: {
+          id: string
+          key: string
+          updated_at: string | null
+          value: Json
+        }
+        Insert: {
+          id?: string
+          key: string
+          updated_at?: string | null
+          value: Json
+        }
+        Update: {
+          id?: string
+          key?: string
+          updated_at?: string | null
+          value?: Json
         }
         Relationships: []
       }
@@ -109,6 +181,48 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      review_responses: {
+        Row: {
+          business_id: string
+          created_at: string | null
+          id: string
+          response_text: string
+          review_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          business_id: string
+          created_at?: string | null
+          id?: string
+          response_text: string
+          review_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          business_id?: string
+          created_at?: string | null
+          id?: string
+          response_text?: string
+          review_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_responses_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "review_responses_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: true
+            referencedRelation: "reviews"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       reviews: {
         Row: {
@@ -148,15 +262,42 @@ export type Database = {
           },
         ]
       }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "business_owner" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -283,6 +424,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "business_owner", "user"],
+    },
   },
 } as const
