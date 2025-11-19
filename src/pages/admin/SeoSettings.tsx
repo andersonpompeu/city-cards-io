@@ -8,9 +8,11 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { Search, Image, Globe, FileText } from "lucide-react";
+import { Search, Image, Globe, FileText, BarChart3 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function SeoSettings() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [settings, setSettings] = useState({
@@ -98,11 +100,17 @@ export default function SeoSettings() {
   return (
     <AdminLayout>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Configurações de SEO</h1>
-          <p className="text-muted-foreground">
-            Configure as meta tags e otimizações para mecanismos de busca
-          </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Configurações de SEO</h1>
+            <p className="text-muted-foreground">
+              Configure as meta tags e otimizações para mecanismos de busca
+            </p>
+          </div>
+          <Button onClick={() => navigate("/admin/seo/auditoria")} variant="outline">
+            <BarChart3 className="h-4 w-4 mr-2" />
+            Ver Auditoria
+          </Button>
         </div>
 
         <Card>

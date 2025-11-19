@@ -18,6 +18,7 @@ import CategoriesList from "./pages/admin/CategoriesList";
 import BusinessUsersList from "./pages/admin/BusinessUsersList";
 import AdminSettings from "./pages/admin/Settings";
 import AdminSeoSettings from "./pages/admin/SeoSettings";
+import AdminSeoAudit from "./pages/admin/SeoAudit";
 import HighlightsList from "./pages/admin/HighlightsList";
 
 // Business pages
@@ -56,6 +57,7 @@ const App = () => (
           <Route path="/admin/usuarios" element={<BusinessUsersList />} />
           <Route path="/admin/configuracoes" element={<AdminSettings />} />
           <Route path="/admin/seo" element={<AdminSeoSettings />} />
+          <Route path="/admin/seo/auditoria" element={<AdminSeoAudit />} />
           
           {/* Business owner routes */}
           <Route path="/empresa/login" element={<BusinessLogin />} />
