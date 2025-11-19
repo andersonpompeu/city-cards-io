@@ -7,7 +7,6 @@ import { Highlight } from "@/types/highlight";
 import { HighlightBadge } from "@/components/HighlightBadge";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-
 export interface Business {
   id: number;
   name: string;
@@ -21,8 +20,6 @@ export interface Business {
   image: string;
   verified?: boolean;
   whatsapp?: string;
-  facebook?: string;
-  instagram?: string;
   // Extended fields for Schema.org SEO
   streetAddress?: string;
   addressLocality?: string;
@@ -37,81 +34,51 @@ export interface Business {
   reviewCount?: number;
   areaServedRadius?: string;
 }
-
 interface BusinessCardProps {
   business: Business;
   highlight?: Highlight | null;
 }
-
-export const BusinessCard = ({ business, highlight }: BusinessCardProps) => {
+export const BusinessCard = ({
+  business,
+  highlight
+}: BusinessCardProps) => {
   const navigate = useNavigate();
-
   const handleWhatsAppClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    
     if (!business.verified) {
       toast.info("Este perfil ainda não foi verificado");
       return;
     }
-
     const whatsappNumber = business.whatsapp || business.phone;
     const cleanNumber = whatsappNumber.replace(/\D/g, '');
     const whatsappUrl = `https://wa.me/${cleanNumber}`;
     window.open(whatsappUrl, '_blank');
   };
-
   const handleViewProfileClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     navigate(`/empresa/${business.id}`);
   };
-
   const renderStars = (rating: number) => {
-    return Array.from({ length: 5 }, (_, i) => (
-      <Star
-        key={i}
-        className={`w-4 h-4 ${
-          i < rating
-            ? "fill-accent text-accent"
-            : "fill-muted text-muted"
-        }`}
-      />
-    ));
+    return Array.from({
+      length: 5
+    }, (_, i) => <Star key={i} className={`w-4 h-4 ${i < rating ? "fill-accent text-accent" : "fill-muted text-muted"}`} />);
   };
-
-  return (
-    <Card
-      onClick={() => navigate(`/empresa/${business.id}`)}
-      className={cn(
-        "overflow-hidden cursor-pointer transition-all duration-300 group bg-gradient-card border-border",
-        highlight && "ring-2 ring-offset-2 shadow-xl hover:scale-[1.02]",
-        !highlight && "hover:shadow-card-hover"
-      )}
-      style={highlight ? {
-        borderColor: highlight.border_color,
-      } : undefined}
-    >
+  return <Card onClick={() => navigate(`/empresa/${business.id}`)} className={cn("overflow-hidden cursor-pointer transition-all duration-300 group bg-gradient-card border-border", highlight && "ring-2 ring-offset-2 shadow-xl hover:scale-[1.02]", !highlight && "hover:shadow-card-hover")} style={highlight ? {
+    borderColor: highlight.border_color
+  } : undefined}>
       <div className="relative h-48 overflow-hidden bg-muted">
-        <img
-          src={business.image}
-          alt={business.name}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-        />
-        {highlight && (
-          <div className="absolute top-3 left-3 z-10">
+        <img src={business.image} alt={business.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+        {highlight && <div className="absolute top-3 left-3 z-10">
             <HighlightBadge level={highlight.level} color={highlight.badge_color} />
-          </div>
-        )}
+          </div>}
         <Badge className="absolute top-3 right-3 bg-primary text-primary-foreground">
           {business.category}
         </Badge>
       </div>
       
-      <div 
-        className="p-5"
-        style={highlight ? {
-          background: `linear-gradient(to bottom, ${highlight.border_color}10, transparent)`
-        } : undefined}
-      >
+      <div className="p-5" style={highlight ? {
+      background: `linear-gradient(to bottom, ${highlight.border_color}10, transparent)`
+    } : undefined}>
         <div className="flex items-start justify-between mb-3">
           <div className="flex-1">
             <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors mb-1">
@@ -136,39 +103,19 @@ export const BusinessCard = ({ business, highlight }: BusinessCardProps) => {
             <MapPin className="w-4 h-4 text-primary flex-shrink-0" />
             <span className="truncate">{business.address}</span>
           </div>
-          <div className="flex items-center gap-2 text-sm text-foreground">
-            <Phone className="w-4 h-4 text-primary flex-shrink-0" />
-            <span>{business.phone}</span>
-          </div>
+          
         </div>
 
         <div className="flex gap-2 pt-3 border-t border-border">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleWhatsAppClick}
-            disabled={!business.verified}
-            className={cn(
-              "flex-1 gap-2",
-              business.verified 
-                ? "hover:bg-green-50 hover:text-green-700 hover:border-green-300 dark:hover:bg-green-950 dark:hover:text-green-400" 
-                : "opacity-50 cursor-not-allowed"
-            )}
-          >
+          <Button variant="outline" size="sm" onClick={handleWhatsAppClick} disabled={!business.verified} className={cn("flex-1 gap-2", business.verified ? "hover:bg-green-50 hover:text-green-700 hover:border-green-300 dark:hover:bg-green-950 dark:hover:text-green-400" : "opacity-50 cursor-not-allowed")}>
             <MessageCircle className="w-4 h-4" />
             WhatsApp
           </Button>
-          <Button
-            variant="default"
-            size="sm"
-            onClick={handleViewProfileClick}
-            className="flex-1 gap-2"
-          >
+          <Button variant="default" size="sm" onClick={handleViewProfileClick} className="flex-1 gap-2">
             <Eye className="w-4 h-4" />
             Ver Perfil
           </Button>
         </div>
       </div>
-    </Card>
-  );
+    </Card>;
 };
