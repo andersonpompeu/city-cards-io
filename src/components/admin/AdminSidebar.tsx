@@ -9,14 +9,22 @@ import {
   Search
 } from "lucide-react";
 
+interface MenuItem {
+  to: string;
+  icon: any;
+  label: string;
+  className?: string;
+}
+
 export const AdminSidebar = () => {
-  const menuItems = [
+  const menuItems: MenuItem[] = [
     { to: "/admin/dashboard", icon: LayoutDashboard, label: "Dashboard" },
     { to: "/admin/empresas", icon: Building2, label: "Empresas" },
     { to: "/admin/anuncios", icon: Megaphone, label: "Anúncios" },
     { to: "/admin/categorias", icon: FolderTree, label: "Categorias" },
     { to: "/admin/usuarios", icon: Users, label: "Usuários" },
     { to: "/admin/seo", icon: Search, label: "SEO" },
+    { to: "/admin/seo/auditoria", icon: Search, label: "Auditoria SEO", className: "pl-8" },
     { to: "/admin/configuracoes", icon: Settings, label: "Configurações" },
   ];
 
@@ -33,7 +41,7 @@ export const AdminSidebar = () => {
           <NavLink
             key={item.to}
             to={item.to}
-            className="flex items-center gap-3 px-4 py-3 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors ${item.className || ""}`}
             activeClassName="bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground"
           >
             <item.icon className="h-5 w-5" />
