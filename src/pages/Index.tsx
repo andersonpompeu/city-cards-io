@@ -3,7 +3,7 @@ import { BusinessCard, Business } from "@/components/BusinessCard";
 import { SearchBar } from "@/components/SearchBar";
 import { CategoryFilter } from "@/components/CategoryFilter";
 import { Button } from "@/components/ui/button";
-import { Plus, Building2 } from "lucide-react";
+import { Plus, Building2, LogIn, UserPlus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { WebsiteSchemaMarkup } from "@/components/WebsiteSchemaMarkup";
 
@@ -223,6 +223,38 @@ const Index = () => {
         description="Encontre empresas e serviços locais de qualidade em Maringá e região. Busque por categorias e localize negócios próximos a você."
       />
       <div className="min-h-screen bg-background">
+      
+      {/* Top Navigation Bar */}
+      <nav className="border-b border-border bg-card">
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <Building2 className="w-6 h-6 text-primary" />
+              <span className="font-semibold text-lg">Guia Comercial</span>
+            </div>
+            
+            <div className="flex gap-2">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => navigate('/empresa/login')}
+              >
+                <LogIn className="w-4 h-4 mr-2" />
+                Entrar
+              </Button>
+              <Button 
+                variant="default" 
+                size="sm"
+                onClick={() => navigate('/adicionar')}
+              >
+                <UserPlus className="w-4 h-4 mr-2" />
+                Cadastrar Empresa
+              </Button>
+            </div>
+          </div>
+        </div>
+      </nav>
+      
       {/* Header */}
       <header className="bg-gradient-hero text-primary-foreground py-8 shadow-lg">
         <div className="container mx-auto px-4">
@@ -243,15 +275,6 @@ const Index = () => {
                 variant="outline"
               >
                 FAQ
-              </Button>
-              <Button
-                onClick={() => navigate("/cadastrar")}
-                size="lg"
-                variant="secondary"
-                className="flex gap-2"
-              >
-                <Plus className="w-5 h-5" />
-                Cadastrar Empresa
               </Button>
             </div>
           </div>
