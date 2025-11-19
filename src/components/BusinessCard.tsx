@@ -20,6 +20,8 @@ export interface Business {
   image: string;
   verified?: boolean;
   whatsapp?: string;
+  facebook?: string;
+  instagram?: string;
   // Extended fields for Schema.org SEO
   streetAddress?: string;
   addressLocality?: string;
