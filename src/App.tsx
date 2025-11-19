@@ -41,6 +41,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/empresa/:id" element={<BusinessDetails />} />
           <Route path="/cadastrar" element={<AddBusiness />} />
+          <Route path="/adicionar" element={<AddBusiness />} />
           <Route path="/faq" element={<FAQ />} />
           
           {/* Admin routes */}
