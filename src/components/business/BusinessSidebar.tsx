@@ -4,13 +4,15 @@ import {
   Building2, 
   MessageSquare, 
   BarChart3,
-  Lock
+  Lock,
+  Sparkles
 } from "lucide-react";
 
 export const BusinessSidebar = () => {
   const menuItems = [
     { to: "/empresa/dashboard", icon: LayoutDashboard, label: "Dashboard" },
     { to: "/empresa/perfil", icon: Building2, label: "Meu Perfil" },
+    { to: "/empresa/destaque", icon: Sparkles, label: "Solicitar Destaque" },
     { to: "/empresa/avaliacoes", icon: MessageSquare, label: "Avaliações" },
     { to: "/empresa/estatisticas", icon: BarChart3, label: "Estatísticas" },
     { to: "/empresa/senha", icon: Lock, label: "Segurança" },

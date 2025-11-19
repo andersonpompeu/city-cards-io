@@ -2,6 +2,9 @@ import { Building2, MapPin, Phone, Star } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
+import { Highlight } from "@/types/highlight";
+import { HighlightBadge } from "@/components/HighlightBadge";
+import { cn } from "@/lib/utils";
 
 export interface Business {
   id: number;
@@ -31,9 +34,10 @@ export interface Business {
 
 interface BusinessCardProps {
   business: Business;
+  highlight?: Highlight | null;
 }
 
-export const BusinessCard = ({ business }: BusinessCardProps) => {
+export const BusinessCard = ({ business, highlight }: BusinessCardProps) => {
   const navigate = useNavigate();
 
   const renderStars = (rating: number) => {
@@ -52,7 +56,14 @@ export const BusinessCard = ({ business }: BusinessCardProps) => {
   return (
     <Card
       onClick={() => navigate(`/empresa/${business.id}`)}
-      className="overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-card-hover group bg-gradient-card border-border"
+      className={cn(
+        "overflow-hidden cursor-pointer transition-all duration-300 group bg-gradient-card border-border",
+        highlight && "ring-2 ring-offset-2 shadow-xl hover:scale-[1.02]",
+        !highlight && "hover:shadow-card-hover"
+      )}
+      style={highlight ? {
+        borderColor: highlight.border_color,
+      } : undefined}
     >
       <div className="relative h-48 overflow-hidden bg-muted">
         <img
@@ -60,12 +71,22 @@ export const BusinessCard = ({ business }: BusinessCardProps) => {
           alt={business.name}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
+        {highlight && (
+          <div className="absolute top-3 left-3 z-10">
+            <HighlightBadge level={highlight.level} color={highlight.badge_color} />
+          </div>
+        )}
         <Badge className="absolute top-3 right-3 bg-primary text-primary-foreground">
           {business.category}
         </Badge>
       </div>
       
-      <div className="p-5">
+      <div 
+        className="p-5"
+        style={highlight ? {
+          background: `linear-gradient(to bottom, ${highlight.border_color}10, transparent)`
+        } : undefined}
+      >
         <div className="flex items-start justify-between mb-3">
           <div className="flex-1">
             <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors mb-1">
