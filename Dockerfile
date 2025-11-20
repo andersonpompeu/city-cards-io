@@ -1,31 +1,32 @@
-# Build stage
+# ---- Build Stage ----
 FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files
+# Copiar dependências
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci
+# Instalar dependências ignorando conflitos
+RUN npm install --legacy-peer-deps
 
-# Copy source code
+# Copiar o restante do código
 COPY . .
 
-# Build the application
+# Fazer o build
 RUN npm run build
 
-# Production stage
+# ---- Production Stage ----
 FROM nginx:alpine
 
-# Copy custom nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Copy built assets from builder stage
+# Copiar build gerado
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Expose port 80
+# Remove conf padrão
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Copiar conf customizada
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 EXPOSE 80
 
-# Start nginx
 CMD ["nginx", "-g", "daemon off;"]
