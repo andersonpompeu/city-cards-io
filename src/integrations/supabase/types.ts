@@ -112,6 +112,44 @@ export type Database = {
         }
         Relationships: []
       }
+      business_analytics: {
+        Row: {
+          business_id: string
+          created_at: string
+          event_type: string
+          id: string
+          ip_address: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          business_id: string
+          created_at?: string
+          event_type: string
+          id?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          business_id?: string
+          created_at?: string
+          event_type?: string
+          id?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "business_analytics_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       businesses: {
         Row: {
           address: string
@@ -412,6 +450,17 @@ export type Database = {
     Functions: {
       expire_old_highlights: { Args: never; Returns: undefined }
       generate_slug: { Args: { id: string; name: string }; Returns: string }
+      get_business_analytics_stats: {
+        Args: {
+          p_business_id: string
+          p_end_date?: string
+          p_start_date?: string
+        }
+        Returns: {
+          count: number
+          event_type: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

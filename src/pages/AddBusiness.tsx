@@ -6,7 +6,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Building2, Save } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { ImageUpload } from "@/components/ImageUpload";
 import {
   Select,
   SelectContent,
@@ -17,7 +19,7 @@ import {
 
 const AddBusiness = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     category: "",
@@ -43,26 +45,59 @@ const AddBusiness = () => {
     "Comércio",
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Validação básica
     if (!formData.name || !formData.category || !formData.phone) {
-      toast({
-        title: "Erro",
-        description: "Por favor, preencha os campos obrigatórios.",
-        variant: "destructive",
-      });
+      toast.error("Por favor, preencha os campos obrigatórios.");
       return;
     }
 
-    // Aqui você adicionaria a lógica para salvar os dados
-    toast({
-      title: "Sucesso!",
-      description: "Empresa cadastrada com sucesso.",
-    });
-    
-    navigate("/");
+    setLoading(true);
+
+    try {
+      // Verificar se o usuário está autenticado
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      // Inserir empresa no banco
+      const { data, error } = await supabase
+        .from("businesses")
+        .insert({
+          id: crypto.randomUUID(),
+          name: formData.name,
+          category: formData.category,
+          description: formData.description,
+          address: formData.address,
+          phone: formData.phone,
+          email: formData.email || null,
+          website: formData.website || null,
+          image: formData.image || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80',
+          owner_id: user?.id || null,
+          status: 'pending',
+          address_locality: 'Maringá',
+          address_region: 'PR',
+          rating: 0
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      toast.success("Empresa cadastrada com sucesso! Aguarde aprovação.");
+      
+      // Redirecionar para dashboard se autenticado, senão para home
+      if (user) {
+        navigate("/empresa/dashboard");
+      } else {
+        navigate("/");
+      }
+    } catch (error: any) {
+      console.error('Erro ao cadastrar empresa:', error);
+      toast.error("Erro ao cadastrar empresa: " + error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChange = (field: string, value: string) => {
@@ -241,33 +276,27 @@ const AddBusiness = () => {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="image" className="text-foreground font-semibold">
-                URL da Imagem
-              </Label>
-              <Input
-                id="image"
-                value={formData.image}
-                onChange={(e) => handleChange("image", e.target.value)}
-                placeholder="https://exemplo.com/imagem.jpg"
-                className="border-2 focus:border-primary"
-              />
-            </div>
+            <ImageUpload
+              onUploadComplete={(url) => handleChange("image", url)}
+              currentImage={formData.image}
+            />
 
             <div className="flex gap-4 pt-4">
               <Button
                 type="submit"
                 size="lg"
                 className="flex-1 gap-2"
+                disabled={loading}
               >
                 <Save className="w-5 h-5" />
-                Cadastrar Empresa
+                {loading ? "Cadastrando..." : "Cadastrar Empresa"}
               </Button>
               <Button
                 type="button"
                 variant="outline"
                 size="lg"
                 onClick={() => navigate("/")}
+                disabled={loading}
               >
                 Cancelar
               </Button>

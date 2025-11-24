@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { BusinessLayout } from "@/components/business/BusinessLayout";
 import { useBusinessAuth } from "@/hooks/useBusinessAuth";
+import { useBusinessAnalytics } from "@/hooks/useBusinessAnalytics";
 import { StatCard } from "@/components/admin/StatCard";
 import { Eye, Phone, MessageCircle, Globe, Star, MessageSquare, Building2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -42,6 +43,9 @@ export default function BusinessDashboard() {
     },
     enabled: !!business?.id,
   });
+
+  // Buscar analytics reais
+  const { data: analytics } = useBusinessAnalytics(business?.id || "");
 
   // Mock data for chart
   const chartData = [
@@ -108,22 +112,22 @@ export default function BusinessDashboard() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <StatCard
             title="Visualizações do Perfil"
-            value={businessData?.views_count || 0}
+            value={analytics?.views || 0}
             icon={Eye}
           />
           <StatCard
             title="Cliques no Telefone"
-            value={0}
+            value={analytics?.phone_clicks || 0}
             icon={Phone}
           />
           <StatCard
             title="Cliques no WhatsApp"
-            value={0}
+            value={analytics?.whatsapp_clicks || 0}
             icon={MessageCircle}
           />
           <StatCard
             title="Cliques no Website"
-            value={0}
+            value={analytics?.website_clicks || 0}
             icon={Globe}
           />
           <StatCard
