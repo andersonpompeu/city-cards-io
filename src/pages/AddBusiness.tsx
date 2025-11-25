@@ -32,6 +32,9 @@ const AddBusiness = () => {
     facebook: "",
     instagram: "",
     image: "",
+    ownerEmail: "",
+    ownerPassword: "",
+    ownerName: "",
   });
 
   const categories = [
@@ -54,14 +57,49 @@ const AddBusiness = () => {
       return;
     }
 
+    if (!formData.ownerEmail || !formData.ownerPassword || !formData.ownerName) {
+      toast.error("Por favor, preencha seus dados de acesso (email, senha e nome).");
+      return;
+    }
+
+    if (formData.ownerPassword.length < 6) {
+      toast.error("A senha deve ter no mínimo 6 caracteres.");
+      return;
+    }
+
     setLoading(true);
 
     try {
-      // Verificar se o usuário está autenticado
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      // Inserir empresa no banco
-      const { data, error } = await supabase
+      // 1. Criar conta de usuário
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: formData.ownerEmail,
+        password: formData.ownerPassword,
+        options: {
+          data: {
+            full_name: formData.ownerName
+          },
+          emailRedirectTo: `${window.location.origin}/empresa/dashboard`
+        }
+      });
+
+      if (authError) throw authError;
+      if (!authData.user) throw new Error("Erro ao criar usuário");
+
+      // 2. Criar role de business_owner
+      const { error: roleError } = await supabase
+        .from("user_roles")
+        .insert({
+          user_id: authData.user.id,
+          role: "business_owner"
+        });
+
+      if (roleError) {
+        console.error("Erro ao criar role:", roleError);
+        throw new Error("Erro ao configurar permissões do usuário");
+      }
+
+      // 3. Inserir empresa no banco
+      const { error: businessError } = await supabase
         .from("businesses")
         .insert({
           id: crypto.randomUUID(),
@@ -73,28 +111,21 @@ const AddBusiness = () => {
           email: formData.email || null,
           website: formData.website || null,
           image: formData.image || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80',
-          owner_id: user?.id || null,
+          owner_id: authData.user.id,
           status: 'pending',
           address_locality: 'Maringá',
           address_region: 'PR',
           rating: 0
-        })
-        .select()
-        .single();
+        });
 
-      if (error) throw error;
+      if (businessError) throw businessError;
 
-      toast.success("Empresa cadastrada com sucesso! Aguarde aprovação.");
+      toast.success("Conta criada com sucesso! Você já pode fazer login.");
+      navigate("/empresa/login");
       
-      // Redirecionar para dashboard se autenticado, senão para home
-      if (user) {
-        navigate("/empresa/dashboard");
-      } else {
-        navigate("/");
-      }
     } catch (error: any) {
-      console.error('Erro ao cadastrar empresa:', error);
-      toast.error("Erro ao cadastrar empresa: " + error.message);
+      console.error('Erro ao cadastrar:', error);
+      toast.error(error.message || "Erro ao cadastrar empresa");
     } finally {
       setLoading(false);
     }
@@ -128,6 +159,55 @@ const AddBusiness = () => {
       <main className="container mx-auto px-4 py-8">
         <Card className="p-6 md:p-8 shadow-card bg-gradient-card max-w-3xl mx-auto">
           <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="bg-muted/50 p-4 rounded-lg space-y-4 mb-4">
+              <h3 className="font-semibold text-lg">Dados de Acesso do Proprietário</h3>
+              
+              <div className="space-y-2">
+                <Label htmlFor="ownerName" className="text-foreground font-semibold">
+                  Nome Completo *
+                </Label>
+                <Input
+                  id="ownerName"
+                  value={formData.ownerName}
+                  onChange={(e) => handleChange("ownerName", e.target.value)}
+                  placeholder="Seu nome completo"
+                  required
+                  className="border-2 focus:border-primary"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="ownerEmail" className="text-foreground font-semibold">
+                  Email de Acesso *
+                </Label>
+                <Input
+                  id="ownerEmail"
+                  type="email"
+                  value={formData.ownerEmail}
+                  onChange={(e) => handleChange("ownerEmail", e.target.value)}
+                  placeholder="seu@email.com"
+                  required
+                  className="border-2 focus:border-primary"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="ownerPassword" className="text-foreground font-semibold">
+                  Senha *
+                </Label>
+                <Input
+                  id="ownerPassword"
+                  type="password"
+                  value={formData.ownerPassword}
+                  onChange={(e) => handleChange("ownerPassword", e.target.value)}
+                  placeholder="Mínimo 6 caracteres"
+                  required
+                  minLength={6}
+                  className="border-2 focus:border-primary"
+                />
+              </div>
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="name" className="text-foreground font-semibold">
                 Nome da Empresa *
