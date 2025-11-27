@@ -6,7 +6,8 @@ import {
   Users, 
   Settings,
   Megaphone,
-  Search
+  Search,
+  ShieldCheck
 } from "lucide-react";
 
 interface MenuItem {
@@ -23,6 +24,7 @@ export const AdminSidebar = () => {
     { to: "/admin/anuncios", icon: Megaphone, label: "Anúncios" },
     { to: "/admin/categorias", icon: FolderTree, label: "Categorias" },
     { to: "/admin/usuarios", icon: Users, label: "Usuários" },
+    { to: "/admin/roles", icon: ShieldCheck, label: "Gerenciar Roles" },
     { to: "/admin/seo", icon: Search, label: "SEO" },
     { to: "/admin/seo/auditoria", icon: Search, label: "Auditoria SEO", className: "pl-8" },
     { to: "/admin/configuracoes", icon: Settings, label: "Configurações" },

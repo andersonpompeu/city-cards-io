@@ -20,6 +20,7 @@ import AdminSettings from "./pages/admin/Settings";
 import AdminSeoSettings from "./pages/admin/SeoSettings";
 import AdminSeoAudit from "./pages/admin/SeoAudit";
 import HighlightsList from "./pages/admin/HighlightsList";
+import UserRoles from "./pages/admin/UserRoles";
 
 // Business pages
 import BusinessLogin from "./pages/business/Login";
@@ -55,6 +56,7 @@ const App = () => (
           <Route path="/admin/anuncios" element={<HighlightsList />} />
           <Route path="/admin/categorias" element={<CategoriesList />} />
           <Route path="/admin/usuarios" element={<BusinessUsersList />} />
+          <Route path="/admin/roles" element={<UserRoles />} />
           <Route path="/admin/configuracoes" element={<AdminSettings />} />
           <Route path="/admin/seo" element={<AdminSeoSettings />} />
           <Route path="/admin/seo/auditoria" element={<AdminSeoAudit />} />
