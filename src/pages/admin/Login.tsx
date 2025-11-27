@@ -24,7 +24,16 @@ export default function AdminLogin() {
         password,
       });
 
-      if (error) throw error;
+      if (error) {
+        if (error.message.includes("Invalid login credentials")) {
+          toast.error("Email ou senha incorretos");
+        } else if (error.message.includes("Email not confirmed")) {
+          toast.error("Por favor, confirme seu email antes de fazer login");
+        } else {
+          toast.error(error.message);
+        }
+        return;
+      }
 
       // Check if user is admin
       const { data: roles } = await supabase
@@ -32,7 +41,7 @@ export default function AdminLogin() {
         .select("role")
         .eq("user_id", data.user.id)
         .eq("role", "admin")
-        .single();
+        .maybeSingle();
 
       if (!roles) {
         await supabase.auth.signOut();
@@ -43,7 +52,8 @@ export default function AdminLogin() {
       toast.success("Login realizado com sucesso!");
       navigate("/admin/dashboard");
     } catch (error: any) {
-      toast.error(error.message || "Erro ao fazer login");
+      console.error("Login error:", error);
+      toast.error("Erro ao fazer login. Tente novamente.");
     } finally {
       setLoading(false);
     }
